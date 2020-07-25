@@ -1,6 +1,7 @@
 -- CHARLOTTE ESI ABRAHAM
 -- DATA SCIENCE ASSIGNMENT ONE
 -- THE WAVE DATA ANALYST CHALLENGE
+--In other to verify the accuracy of the queries a dummy was created test them.
 
 --QUESTION 1
 
@@ -56,26 +57,19 @@
 
 
 8.    
-CREATE TABLE send_volume_by_country_and_kind AS
-
+      CREATE TABLE send_volume_by_country_and_kind AS
       SELECT SUM(transfers.send_amount_scalar), 
       wallets.ledger_location, array_agg(transfers.kind) 
-
       FROM transfers
-LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
-
+      LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
       WHERE transfers.when_created > CURRENT_DATE - INTERVAL '7 days'
-GROUP BY wallets.ledger_location
+      GROUP BY wallets.ledger_location
 
 9.   CREATE TABLE transaction_by_country_and_kind AS
-
      SELECT COUNT (transfers.transfer_id), wallets.ledger_location, array_agg(transfers.kind) 
-
      FROM transfers
-LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
-
+     LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
      WHERE transfers.when_created > CURRENT_DATE - INTERVAL '7 days'
-
      GROUP BY wallets.ledger_location;
 
     
@@ -84,7 +78,7 @@ LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
       WHERE send_amount_currency = 'CFA'
 
       AND send_amount_scalar > 10000000 AND when_created > now()-interval '1 month'
- - 
+ -
 
 
 
