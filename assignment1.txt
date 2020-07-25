@@ -1,0 +1,95 @@
+-- CHARLOTTE ESI ABRAHAM
+-- DATA SCIENCE ASSIGNMENT ONE
+-- THE WAVE DATA ANALYST CHALLENGE
+
+--QUESTION 1
+
+1.	SELECT COUNT (*) FROM users 
+        --selects and counts all fields from users
+
+
+2.     	SELECT COUNT (send_amount_currency) FROM transfers
+        WHERE send_amount_currency = 'CFA'
+   --   we filter the table by counting the number of times transcations in
+   --   send money column was in CFA.The WHERE clause helps us get the transcations 
+   --   in CFA.
+
+
+3.     	SELECT COUNT (DISTINCT u_id)FROM transfers
+        WHERE send_amount_currency ='CFA'
+
+   --   we filter the table by counting the distinct number of u_ids.This
+   --   is because a user id can perform more than one transaction.This will
+   --   cause the users id to repeat .Hence SELECT COUNT DISTINCT helps to get 
+   --   unique users ids   when the send_amount_currency is 'CFA'
+
+
+4.     SELECT COUNT (atx_id) from agent_transactions 
+       WHERE   when_created IN '2018'
+   --  The transaction id is a primary key in this case.Hene we count the unique transaction id numbers
+   --  and we further filter where 2018 is in the when_created.
+
+5.     WIH agent_with_drawers AS
+       (SELECT COUNT(agent_id)
+       AS net_withdrawers FROM agent_transactions 
+       HAVING COUNT (amount ) 
+       IN (SELECT COUNT(amount) FROM agent_transactions WHERE amount > -1
+       AND amount!=0 HAVING COUNT (amount)>SELECT COUNT(amount)
+       FROM agent_transactions WHERE amount<1 AND amount != 0)))
+       SELECT net_withdrawers FROM agent_redrawers
+
+6.     SELECT count(atx.amount) AS "atx volume summary", ag.city
+       FROM agent_transaction  AS atx LEFT OUTER JOIN agents AS ag ON
+       atx.atx_id=ag.agent_id
+       WHERE atx.when-created BETWEEN NOW ()::DATE-EXTRACT (DOW FROM NOW ())
+       AND NOW ::DATE EXTRACT (DOW FROM NOW())::INTEGER
+       GROUP BY ag.city
+
+
+7.     SELECT COUNT (atx.atx_id) AS "atx volume",count (ag.city)
+       AS "city",count(ag.country)
+       FROM agent_transactions AS atx INNER JOIN agentts AS ag ON
+       atx.atx_id=ag.agent_id
+       GROUP BY ag.country
+
+
+
+
+8.    
+CREATE TABLE send_volume_by_country_and_kind AS
+
+      SELECT SUM(transfers.send_amount_scalar), 
+      wallets.ledger_location, array_agg(transfers.kind) 
+
+      FROM transfers
+LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
+
+      WHERE transfers.when_created > CURRENT_DATE - INTERVAL '7 days'
+GROUP BY wallets.ledger_location
+
+9.   CREATE TABLE transaction_by_country_and_kind AS
+
+     SELECT COUNT (transfers.transfer_id), wallets.ledger_location, array_agg(transfers.kind) 
+
+     FROM transfers
+LEFT OUTER JOIN wallets ON transfers.source_wallet_id = wallets.wallet_id
+
+     WHERE transfers.when_created > CURRENT_DATE - INTERVAL '7 days'
+
+     GROUP BY wallets.ledger_location;
+
+    
+
+10.   SELECT source_wallet_id, send_amount_scalar FROM transfers
+      WHERE send_amount_currency = 'CFA'
+
+      AND send_amount_scalar > 10000000 AND when_created > now()-interval '1 month'
+ - 
+
+
+
+
+
+
+
+
